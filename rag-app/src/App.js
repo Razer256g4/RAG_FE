@@ -11,6 +11,8 @@ const App = () => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [deleteFileName, setDeleteFileName] =useState('');
+  const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
+
 
   const handleQuerySubmit = async () => {
     try {
@@ -23,11 +25,24 @@ const App = () => {
       });
       const data = await response.json();
       setChatResponse(data);
+      setCurrentChunkIndex(0);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
     finally {
       setLoading(false);
+    }
+  };
+
+  const handleNextChunk = () => {
+    if (currentChunkIndex < chatResponse.response.chunk_list.length - 1) {
+      setCurrentChunkIndex(currentChunkIndex + 1);
+    }
+  };
+
+  const handlePrevChunk = () => {
+    if (currentChunkIndex > 0) {
+      setCurrentChunkIndex(currentChunkIndex - 1);
     }
   };
 
@@ -104,6 +119,9 @@ const App = () => {
       loading={loading}
       onListFiles={handleListFiles} // Pass functions to handle list and delete files
       onDeleteFile={handleDeleteFile}
+      onPrevChunk={handlePrevChunk}
+      onNextChunk={handleNextChunk}
+      currentChunkIndex={currentChunkIndex}
     />
   );
 };

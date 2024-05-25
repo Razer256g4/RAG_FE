@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 
-const Form = ({file, setFile, deleteFileName, setdeleteFileName, userQuery, setUserQuery, handleQuerySubmit, 
-  handleFileChange, chatResponse, listResponse, deleteResponse, uploadResponse, loading, onListFiles, onDeleteFile }) => {
- 
+const Form = ({
+  file, setFile, deleteFileName, setdeleteFileName, userQuery, setUserQuery,
+  handleQuerySubmit, handleFileChange, chatResponse, listResponse, deleteResponse,
+  uploadResponse, loading, onListFiles, onDeleteFile, onPrevChunk, onNextChunk,
+  currentChunkIndex
+}) => {
 
   const handleSubmitQuery = () => {
     handleQuerySubmit(userQuery);
@@ -10,7 +13,7 @@ const Form = ({file, setFile, deleteFileName, setdeleteFileName, userQuery, setU
 
   return (
     <div className="container">
-      <h2 className="title">RAG model</h2>
+      <h2 className="title">RAG Model</h2>
       <div className="form">
         {/* Query Input */}
         <div>
@@ -40,8 +43,9 @@ const Form = ({file, setFile, deleteFileName, setdeleteFileName, userQuery, setU
           <button type="button" onClick={handleFileChange} className="button">Upload File</button>
         </div>
 
+        {/* Delete File */}
         <div>
-          <label htmlFor="deleteFileName" className="label">File Name</label>
+          <label htmlFor="deleteFileName" className="label">File Name:</label>
           <input
             type="text"
             id="deleteFileName"
@@ -50,8 +54,9 @@ const Form = ({file, setFile, deleteFileName, setdeleteFileName, userQuery, setU
             onChange={(e) => setdeleteFileName(e.target.value)}
             className="input"
           />
-          <button type="button" onClick={onDeleteFile} className="button">Delete Files</button>
+          <button type="button" onClick={onDeleteFile} className="button">Delete File</button>
         </div>
+
         {/* Other Buttons */}
         <div>
           <button type="button" onClick={onListFiles} className="button">List Files</button>
@@ -65,30 +70,48 @@ const Form = ({file, setFile, deleteFileName, setdeleteFileName, userQuery, setU
         <div key="chat-response" className="response">
           <h3 className="response-title">Chat Response:</h3>
           <pre className="response-data">{chatResponse.response.answer}</pre>
-          <div className="chunk-list">
+          <div className="chunk-box">
             <h3>Chunks:</h3>
-            {chatResponse.response.chunk_list.map((chunk, index) => (
-              <div key={index} className="chunk">
-                <p className="chunk-number">{index + 1}</p>
-                <pre className="chunk-text">{chunk}</pre>
+            <div key={currentChunkIndex} className="chunk">
+              <p className="chunk-number">Chunk {currentChunkIndex + 1}</p>
+              <pre className="chunk-text">{chatResponse.response.chunk_list[currentChunkIndex]}</pre>
+              <div className="chunk-navigation">
+                <button
+                  type="button"
+                  onClick={onPrevChunk}
+                  className="arrow-button"
+                  disabled={currentChunkIndex === 0}
+                >
+                  &#9664; {/* Left Arrow */}
+                </button>
+                <button
+                  type="button"
+                  onClick={onNextChunk}
+                  className="arrow-button"
+                  disabled={currentChunkIndex >= chatResponse.response.chunk_list.length - 1}
+                >
+                  &#9654; {/* Right Arrow */}
+                </button>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       )}
-     
+
       {deleteResponse && (
         <div key="delete-response" className="response">
           <h3 className="response-title">Delete Response:</h3>
           <pre className="response-data">{JSON.stringify(deleteResponse, null, 2)}</pre>
         </div>
       )}
+
       {listResponse && (
         <div key="list-response" className="response">
           <h3 className="response-title">List Response:</h3>
           <pre className="response-data">{JSON.stringify(listResponse, null, 2)}</pre>
         </div>
       )}
+
       {uploadResponse && (
         <div key="upload-response" className="response">
           <h3 className="response-title">Upload Response:</h3>
