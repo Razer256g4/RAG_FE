@@ -54,7 +54,12 @@ const Form = ({
         </div>
       </div>
 
-      {loading && <div className="loader">Loading...</div>}
+      {loading && (
+        <div className="loader-container">
+          <div className="loader"></div>
+          <div className="loader-text">Loading..</div>
+        </div>
+      )}
 
       {/* Display Responses */}
       {chatResponse && (
@@ -110,7 +115,7 @@ const Form = ({
                   onClick={() => handleDeleteClick(file.filename)}
                   disabled={loading}
                 >
-                DELETE
+                  Delete
                 </button>
               </li>
             ))}
