@@ -60,8 +60,27 @@
   color: #808080;            /* Grey text */
 }
 
+.loader-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto; /* Center the loader horizontally */
+}
+
+.loader-text {
+  position: absolute;
+  top: 50%;
+  left: 51%;
+  transform: translate(-50%, -50%);
+  font-size: 15px;
+  font-weight: bold;
+  color: #db3f34;
+}
+
 .loader {
-  vertical-align: middle;
   border: 16px solid #f3f3f3; /* Light grey */
   border-top: 16px solid #3498db; /* Blue */
   border-radius: 50%;
@@ -368,4 +387,25 @@
 
 .upload-button:hover {
   color: #0056b3;
+}
+
+
+.file-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.file-list-item {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.file-name {
+  font-weight: bold;
+}
+
+.file-time {
+  color: #888;
 }
