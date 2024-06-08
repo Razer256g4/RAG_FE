@@ -10,11 +10,20 @@ const App = () => {
   const [uploadResponse, setUploadResponse] = useState(null);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [deleteFileName, setDeleteFileName] =useState('');
+  const [deleteFileName, setDeleteFileName] = useState('');
+  const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
+
+  const clearResponses = () => {
+    setChatResponse(null);
+    setListResponse(null);
+    setDeleteResponse(null);
+    setUploadResponse(null);
+  };
 
   const handleQuerySubmit = async () => {
     try {
       setLoading(true);
+      clearResponses();
       const response = await fetch(`http://localhost:8000/api/chat?query=${encodeURIComponent(userQuery)}`, {
         method: 'GET',
         headers: {
@@ -23,11 +32,23 @@ const App = () => {
       });
       const data = await response.json();
       setChatResponse(data);
+      setCurrentChunkIndex(0);
     } catch (error) {
       console.error('Error fetching data:', error);
-    }
-    finally {
+    } finally {
       setLoading(false);
+    }
+  };
+
+  const handleNextChunk = () => {
+    if (currentChunkIndex < chatResponse.response.chunk_list.length - 1) {
+      setCurrentChunkIndex(currentChunkIndex + 1);
+    }
+  };
+
+  const handlePrevChunk = () => {
+    if (currentChunkIndex > 0) {
+      setCurrentChunkIndex(currentChunkIndex - 1);
     }
   };
 
@@ -38,6 +59,7 @@ const App = () => {
 
     try {
       setLoading(true);
+      clearResponses();
       const response = await fetch('http://localhost:8000/api/upload-file/', {
         method: 'POST',
         body: formData,
@@ -57,6 +79,8 @@ const App = () => {
 
   const handleListFiles = async () => {
     try {
+      setLoading(true);
+      clearResponses();
       const response = await fetch('http://localhost:8000/api/list-files', {
         method: 'GET',
         headers: {
@@ -68,11 +92,15 @@ const App = () => {
       console.log('List of files:', data);
     } catch (error) {
       console.error('Error listing files:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDeleteFile = async () => {
     try {
+      setLoading(true);
+      clearResponses();
       const response = await fetch(`http://localhost:8000/api/delete-file/?filename=${deleteFileName}`, {
         method: 'DELETE',
         headers: {
@@ -80,10 +108,12 @@ const App = () => {
         }
       });
       const data = await response.json();
-      setDeleteResponse(data)
+      setDeleteResponse(data);
       console.log('File deleted:', data);
     } catch (error) {
       console.error('Error deleting file:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -102,8 +132,11 @@ const App = () => {
       deleteResponse={deleteResponse}
       uploadResponse={uploadResponse}
       loading={loading}
-      onListFiles={handleListFiles} // Pass functions to handle list and delete files
+      onListFiles={handleListFiles}
       onDeleteFile={handleDeleteFile}
+      onPrevChunk={handlePrevChunk}
+      onNextChunk={handleNextChunk}
+      currentChunkIndex={currentChunkIndex}
     />
   );
 };

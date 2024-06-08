@@ -1,16 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const Form = ({file, setFile, deleteFileName, setdeleteFileName, userQuery, setUserQuery, handleQuerySubmit, 
-  handleFileChange, chatResponse, listResponse, deleteResponse, uploadResponse, loading, onListFiles, onDeleteFile }) => {
- 
+const Form = ({
+  file, setFile, deleteFileName, setdeleteFileName, userQuery, setUserQuery,
+  handleQuerySubmit, handleFileChange, chatResponse, listResponse, deleteResponse,
+  uploadResponse, loading, onListFiles, onDeleteFile, onPrevChunk, onNextChunk,
+  currentChunkIndex
+}) => {
 
   const handleSubmitQuery = () => {
     handleQuerySubmit(userQuery);
   };
 
+  const handleDeleteClick = (filename) => {
+    setdeleteFileName(filename);
+    onDeleteFile();
+  };
+
   return (
     <div className="container">
-      <h2 className="title">RAG model</h2>
+      <h2 className="title">RAG PIPELINE</h2>
       <div className="form">
         {/* Query Input */}
         <div>
@@ -23,7 +31,7 @@ const Form = ({file, setFile, deleteFileName, setdeleteFileName, userQuery, setU
             onChange={(e) => setUserQuery(e.target.value)}
             className="input"
           />
-          <button type="button" onClick={handleSubmitQuery} className="button">Submit Query</button>
+          <button type="button" onClick={handleSubmitQuery} className="button" disabled={loading}>Submit Query</button>
         </div>
 
         {/* File Upload */}
@@ -37,56 +45,76 @@ const Form = ({file, setFile, deleteFileName, setdeleteFileName, userQuery, setU
             onChange={(e) => setFile(e.target.files[0])}
             className="input"
           />
-          <button type="button" onClick={handleFileChange} className="button">Upload File</button>
+          <button type="button" onClick={handleFileChange} className="button" disabled={loading}>Upload File</button>
         </div>
 
-        <div>
-          <label htmlFor="deleteFileName" className="label">File Name</label>
-          <input
-            type="text"
-            id="deleteFileName"
-            name="deleteFileName"
-            value={deleteFileName}
-            onChange={(e) => setdeleteFileName(e.target.value)}
-            className="input"
-          />
-          <button type="button" onClick={onDeleteFile} className="button">Delete Files</button>
-        </div>
         {/* Other Buttons */}
         <div>
-          <button type="button" onClick={onListFiles} className="button">List Files</button>
+          <button type="button" onClick={onListFiles} className="button" disabled={loading}>List Files</button>
         </div>
       </div>
 
-      {loading && <div className="loading">Loading...</div>}
+      {loading && <div className="loader">Loading...</div>}
 
       {/* Display Responses */}
       {chatResponse && (
         <div key="chat-response" className="response">
           <h3 className="response-title">Chat Response:</h3>
           <pre className="response-data">{chatResponse.response.answer}</pre>
-          <div className="chunk-list">
+          <div className="chunk-box">
             <h3>Chunks:</h3>
-            {chatResponse.response.chunk_list.map((chunk, index) => (
-              <div key={index} className="chunk">
-                <p className="chunk-number">{index + 1}</p>
-                <pre className="chunk-text">{chunk}</pre>
+            <div key={currentChunkIndex} className="chunk">
+              <p className="chunk-number">Chunk {currentChunkIndex + 1}</p>
+              <pre className="chunk-text">{chatResponse.response.chunk_list[currentChunkIndex]}</pre>
+              <div className="chunk-navigation">
+                <button
+                  type="button"
+                  onClick={onPrevChunk}
+                  className="arrow-button"
+                  disabled={currentChunkIndex === 0 || loading}
+                >
+                  &#9664; {/* Left Arrow */}
+                </button>
+                <button
+                  type="button"
+                  onClick={onNextChunk}
+                  className="arrow-button"
+                  disabled={currentChunkIndex >= chatResponse.response.chunk_list.length - 1 || loading}
+                >
+                  &#9654; {/* Right Arrow */}
+                </button>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       )}
-     
+
       {deleteResponse && (
         <div key="delete-response" className="response">
           <h3 className="response-title">Delete Response:</h3>
           <pre className="response-data">{JSON.stringify(deleteResponse, null, 2)}</pre>
         </div>
       )}
+
       {listResponse && (
         <div key="list-response" className="response">
           <h3 className="response-title">List Response:</h3>
-          <pre className="response-data">{JSON.stringify(listResponse, null, 2)}</pre>
+          <ul className="file-list">
+            {listResponse.map((file, index) => (
+              <li key={index} className="file-list-item">
+                <span className="file-name">{file.filename}</span>
+                <span className="file-time">{file.last_modified_time}</span>
+                <button
+                  type="button"
+                  className="delete-button"
+                  onClick={() => handleDeleteClick(file.filename)}
+                  disabled={loading}
+                >
+                DELETE
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
       {uploadResponse && (

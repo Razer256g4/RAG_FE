@@ -1,59 +1,93 @@
-/* Form.css */
+/* Container and Title */
 .container {
   margin: auto;
   padding: 20px;
   max-width: 800px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .title {
-  font-size: 24px;
+  font-size: 28px;
   margin-bottom: 20px;
+  text-align: center;
+  color: #333;
 }
 
+/* Form Styles */
 .form {
   display: flex;
   flex-direction: column;
+  gap: 15px;
 }
 
 .label {
   margin-bottom: 5px;
-  margin-right: 10px;
+  font-weight: bold;
+  color: #555;
 }
 
 .input {
-  margin-bottom: 10px;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-right: 16px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .button {
-  margin-right: 10px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
+  background-color: #007BFF; /* Blue background */
+  color: white;             /* White text */
+  border: none;             /* Remove border */
+  padding: 10px 20px;       /* Add padding */
+  cursor: pointer;          /* Pointer cursor on hover */
+  font-size: 16px;          /* Increase font size */
+  margin: 5px;              /* Add margin */
+  border-radius: 5px;       /* Rounded corners */
+  transition: background-color 0.3s; /* Smooth transition */
 }
 
-.button:hover {
-  background-color: #0056b3;
+.button:hover:not(:disabled) {
+  background-color: #0056b3; /* Darker blue on hover */
 }
 
-.loading {
-  margin-top: 20px;
-  font-size: 18px;
-  color: #007bff;
+/* Disabled button styles */
+.button:disabled {
+  background-color: #d3d3d3; /* Light grey background */
+  cursor: not-allowed;       /* Not allowed cursor */
+  color: #808080;            /* Grey text */
 }
 
+.loader {
+  vertical-align: middle;
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Response Styles */
 .response {
   margin-top: 20px;
+  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
 
 .response-title {
   font-size: 20px;
+  margin-bottom: 10px;
+  color: #333;
 }
 
 .response-data {
@@ -62,37 +96,51 @@
   padding: 10px;
   border-radius: 4px;
   overflow: auto;
+  white-space: pre-wrap;
 }
 
+/* Chunk Styles */
 .chunk-list {
   margin-top: 20px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chunk-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
 
 .chunk {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: 20px;
   margin-bottom: 10px;
 }
 
 .chunk-number {
   font-weight: bold;
   margin-bottom: 5px;
+  color: #555;
 }
 
 .chunk-text {
   font-size: 16px;
-  background-color: #f5f5f5;
   padding: 10px;
   border-radius: 4px;
-  white-space: nowrap;
-  overflow: scroll;
-  text-overflow: ellipsis;
-  max-width: 200px;
-  max-height: 100px; /* Set maximum height */
-  overflow-y: auto; 
+  background-color: #fff;
+  border: 1px solid #ccc;
+  max-width: 300px;
+  max-height: 150px;
+  overflow-y: auto;
+  white-space: pre-wrap;
 }
 
 /* Upload Popup */
@@ -112,13 +160,14 @@
   background-color: #fefefe;
   padding: 20px;
   border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .close {
-  color: #aaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
+  color: #aaa;
   cursor: pointer;
 }
 
@@ -129,8 +178,192 @@
 .upload-button {
   font-size: 24px;
   background-color: transparent;
+  border: none;/* Container and Title */
+  .container {
+    margin: auto;
+    padding: 20px;
+    max-width: 800px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+  }
+  
+  /* Form Styles */
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Loading */
+  .loading {
+    margin-top: 20px;
+    font-size: 18px;
+    text-align: center;
+    color: #007bff;
+  }
+  
+  /* Response Styles */
+  .response {
+    margin-top: 0;
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  .response-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .response-data {
+    font-size: 16px;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 4px;
+    overflow: auto;
+    white-space: pre-wrap;
+  }
+ /* Chunk Styles */
+.chunk-box {
+  margin-top: 0px;
+}
+
+.chunk {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  width: 100%; /* Make the chunk take full width */
+}
+
+.chunk-number {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.chunk-text {
+  font-size: 16px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  flex: 1; /* Make the chunk text fill available space */
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+.chunk-navigation {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.chunk-navigation .arrow-button {
+  padding: 10px;
   border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.chunk-navigation .arrow-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.chunk-navigation .arrow-button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+  
+  /* Upload Popup */
+  .upload-popup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .upload-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .close {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+  }
+  
+  .close:hover {
+    color: black;
+  }
+  
+  .upload-button {
+    font-size: 24px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .upload-button:hover {
+    color: #0056b3;
+  }
+  
+  transition: color 0.3s ease;
 }
 
 .upload-button:hover {
